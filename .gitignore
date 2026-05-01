@@ -1,0 +1,16 @@
+# ROS 2 build artifacts
+cleaning_robot_ws/build/
+cleaning_robot_ws/install/
+cleaning_robot_ws/log/
+
+# Python artifacts
+**/__pycache__/
+*.pyc
+
+# Local IDE settings
+.vscode/
+.idea/
+.DS_Store
+
+# Agent state
+.agent/
