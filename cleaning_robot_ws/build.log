@@ -1,0 +1,10 @@
+Starting >>> cleaning_robot_algorithms
+Starting >>> cleaning_robot_description
+Starting >>> cleaning_robot_gazebo
+Starting >>> cleaning_robot_nav
+Finished <<< cleaning_robot_description [1.13s]
+Finished <<< cleaning_robot_gazebo [1.14s]
+Finished <<< cleaning_robot_nav [1.14s]
+Finished <<< cleaning_robot_algorithms [1.18s]
+
+Summary: 4 packages finished [1.32s]
