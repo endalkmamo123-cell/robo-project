@@ -28,6 +28,7 @@ setup(
             'dwa       = cleaning_robot_algorithms.dwa:main',
             'apf       = cleaning_robot_algorithms.apf:main',
             'benchmark = cleaning_robot_algorithms.benchmark:main',
+	    'vacuum    = cleaning_robot_algorithms.vacuum:main',
         ],
     },
 )
