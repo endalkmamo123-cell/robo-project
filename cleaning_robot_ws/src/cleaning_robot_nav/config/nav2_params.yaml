@@ -173,8 +173,8 @@ local_costmap:
           data_type: "LaserScan"
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
+        inflation_radius: 0.3   # ← keep this ≤ half the doorway width
         cost_scaling_factor: 3.0
-        inflation_radius: 0.55
 
 global_costmap:
   global_costmap:

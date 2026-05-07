@@ -11,6 +11,13 @@
     <plugin filename="gz-sim-sensors-system"        name="gz::sim::systems::Sensors">
       <render_engine>ogre2</render_engine>
     </plugin>
+    <!-- Bird's eye camera start position -->
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose>0 0 25 0 1.5707963 0</pose>
+        <projection_type>orthographic</projection_type>
+      </camera>
+    </gui>
 
     <light type="directional" name="sun">
       <cast_shadows>true</cast_shadows>
@@ -88,13 +95,13 @@
     </model>
 
     <!-- Internal divider wall with doorway gap -->
+    <!-- AFTER: shorten divider_left so gap is y=-3.5 to y=0 (3.5m doorway) -->
     <model name="divider_left">
-      <static>true</static>
       <link name="link">
-        <pose>0 2.5 1.5 0 0 0</pose>
-        <collision name="c"><geometry><box><size>0.15 10 3</size></box></geometry></collision>
+        <pose>0 3.25 1.5 0 0 0</pose>   <!-- shifted center up -->
+        <collision name="c"><geometry><box><size>0.15 8.5 3</size></box></geometry></collision>
         <visual name="v">
-          <geometry><box><size>0.15 10 3</size></box></geometry>
+          <geometry><box><size>0.15 8.5 3</size></box></geometry>
           <material><ambient>0.88 0.86 0.84 1</ambient><diffuse>0.88 0.86 0.84 1</diffuse></material>
         </visual>
       </link>
