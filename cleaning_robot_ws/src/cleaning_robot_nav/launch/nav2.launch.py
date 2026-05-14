@@ -2,8 +2,6 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.actions import IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 def generate_launch_description():
     nav_pkg = get_package_share_directory('cleaning_robot_nav')
@@ -17,15 +15,27 @@ def generate_launch_description():
         parameters=[params, {'use_sim_time': True}]
     )
 
-    nav2 = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(
-                get_package_share_directory('nav2_bringup'),
-                'launch', 'navigation_launch.py')),
-        launch_arguments={
-            'params_file': params,
-            'use_sim_time': 'true'
-        }.items()
+    planner = Node(
+        package='nav2_planner',
+        executable='planner_server',
+        name='planner_server',
+        output='screen',
+        parameters=[params, {'use_sim_time': True}]
+    )
+
+    lifecycle_manager = Node(
+        package='nav2_lifecycle_manager',
+        executable='lifecycle_manager',
+        name='lifecycle_manager_navigation',
+        output='screen',
+        parameters=[{
+            'use_sim_time': True,
+            'autostart': True,
+            'node_names': [
+                'slam_toolbox',
+                'planner_server',
+            ]
+        }]
     )
 
     rviz = Node(
@@ -35,4 +45,9 @@ def generate_launch_description():
         output='screen'
     )
 
-    return LaunchDescription([slam, nav2, rviz])
+    return LaunchDescription([
+        slam,
+        planner,
+        lifecycle_manager,
+        rviz,
+    ])
