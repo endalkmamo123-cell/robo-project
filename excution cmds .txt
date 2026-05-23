@@ -1,0 +1,48 @@
+t1
+
+source /opt/ros/jazzy/setup.bash
+source ~/robo-project/cleaning_robot_ws/install/setup.bash
+ros2 launch cleaning_robot_gazebo sim.launch.py
+
+t2 slam + planner
+
+source /opt/ros/jazzy/setup.bash
+source ~/robo-project/cleaning_robot_ws/install/setup.bash
+ros2 run tf2_ros static_transform_publisher \
+  --x -5 --y 0 --z 0 --yaw 0 --pitch 0 --roll 0 \
+  --frame-id odom --child-frame-id base_link &
+ros2 launch cleaning_robot_nav nav2.launch.py
+
+t3 build map 
+
+source /opt/ros/jazzy/setup.bash
+source ~/robo-project/cleaning_robot_ws/install/setup.bash
+ros2 run cleaning_robot_algorithms vacuum &
+ros2 run teleop_twist_keyboard teleop_twist_keyboard \
+  --ros-args --remap cmd_vel:=/cmd_vel
+
+
+t4 algorithm 
+
+
+astar
+ros2 run cleaning_robot_algorithms astar
+ros2 topic pub --once /goal_pose geometry_msgs/msg/PoseStamped \
+  '{"header":{"frame_id":"map"},"pose":{"position":{"x":3.0,"y":-2.0},"orientation":{"w":1.0}}}'
+
+
+Dijkstra
+
+ros2 run cleaning_robot_algorithms dijkstra
+ros2 topic pub --once /goal_pose geometry_msgs/msg/PoseStamped \
+  '{"header":{"frame_id":"map"},"pose":{"position":{"x":3.0,"y":-2.0},"orientation":{"w":1.0}}}'
+
+
+DWA
+ros2 run cleaning_robot_algorithms dwa
+
+APF
+ros2 run cleaning_robot_algorithms apf
+ros2 topic pub --once /goal_pose geometry_msgs/msg/PoseStamped \
+  '{"header":{"frame_id":"map"},"pose":{"position":{"x":-5.0,"y":1.0},"orientation":{"w":1.0}}}'
+

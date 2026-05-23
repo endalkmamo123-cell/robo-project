@@ -1,142 +1,443 @@
 <?xml version="1.0" ?>
 <sdf version="1.9">
-  <world name="room_world">
+  <world name="office_world">
     <physics name="1ms" type="ignored">
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1.0</real_time_factor>
     </physics>
-    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
-    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-physics-system"        name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system"  name="gz::sim::systems::UserCommands"/>
     <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
-    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+    <plugin filename="gz-sim-sensors-system"        name="gz::sim::systems::Sensors">
       <render_engine>ogre2</render_engine>
     </plugin>
+    <!-- Bird's eye camera start position -->
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose>0 0 25 0 1.5707963 0</pose>
+        <projection_type>orthographic</projection_type>
+      </camera>
+    </gui>
 
     <light type="directional" name="sun">
       <cast_shadows>true</cast_shadows>
       <pose>0 0 10 0 0 0</pose>
-      <diffuse>0.8 0.8 0.8 1</diffuse>
-      <specular>0.2 0.2 0.2 1</specular>
-      <attenuation>
-        <range>1000</range>
-        <constant>0.9</constant>
-        <linear>0.01</linear>
-        <quadratic>0.001</quadratic>
-      </attenuation>
+      <diffuse>0.9 0.9 0.85 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <attenuation><range>1000</range><constant>0.9</constant><linear>0.01</linear><quadratic>0.001</quadratic></attenuation>
       <direction>-0.5 0.1 -0.9</direction>
     </light>
 
-    <model name="ground_plane">
+    <!-- Floor -->
+    <model name="floor">
       <static>true</static>
       <link name="link">
         <collision name="collision">
-          <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>10 10</size>
-            </plane>
-          </geometry>
+          <geometry><plane><normal>0 0 1</normal><size>20 15</size></plane></geometry>
         </collision>
         <visual name="visual">
-          <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>10 10</size>
-            </plane>
-          </geometry>
+          <geometry><plane><normal>0 0 1</normal><size>20 15</size></plane></geometry>
           <material>
-            <ambient>0.8 0.8 0.8 1</ambient>
-            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <ambient>0.85 0.82 0.78 1</ambient>
+            <diffuse>0.85 0.82 0.78 1</diffuse>
           </material>
         </visual>
       </link>
     </model>
 
-    <!-- Walls -->
-    <model name="walls">
+    <!-- ===== OFFICE WALLS (20x15m room) ===== -->
+    <model name="wall_north">
       <static>true</static>
-      <link name="wall_1">
-        <pose>0 5 1 0 0 0</pose>
-        <collision name="c1"><geometry><box><size>10 0.1 2</size></box></geometry></collision>
-        <visual name="v1"><geometry><box><size>10 0.1 2</size></box></geometry></visual>
-      </link>
-      <link name="wall_2">
-        <pose>0 -5 1 0 0 0</pose>
-        <collision name="c2"><geometry><box><size>10 0.1 2</size></box></geometry></collision>
-        <visual name="v2"><geometry><box><size>10 0.1 2</size></box></geometry></visual>
-      </link>
-      <link name="wall_3">
-        <pose>5 0 1 0 0 1.5708</pose>
-        <collision name="c3"><geometry><box><size>10 0.1 2</size></box></geometry></collision>
-        <visual name="v3"><geometry><box><size>10 0.1 2</size></box></geometry></visual>
-      </link>
-      <link name="wall_4">
-        <pose>-5 0 1 0 0 1.5708</pose>
-        <collision name="c4"><geometry><box><size>10 0.1 2</size></box></geometry></collision>
-        <visual name="v4"><geometry><box><size>10 0.1 2</size></box></geometry></visual>
-      </link>
-    </model>
-
-    <!-- Obstacles -->
-    <model name="sofa">
-      <static>true</static>
-      <pose>2 3 0.4 0 0 0</pose>
       <link name="link">
-        <collision name="collision"><geometry><box><size>2 1 0.8</size></box></geometry></collision>
-        <visual name="visual">
-          <geometry><box><size>2 1 0.8</size></box></geometry>
-          <material><ambient>0.6 0.3 0.1 1</ambient><diffuse>0.6 0.3 0.1 1</diffuse></material>
+        <pose>0 7.5 1.5 0 0 0</pose>
+        <collision name="c"><geometry><box><size>20 0.15 3</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>20 0.15 3</size></box></geometry>
+          <material><ambient>0.92 0.90 0.88 1</ambient><diffuse>0.92 0.90 0.88 1</diffuse></material>
         </visual>
       </link>
     </model>
 
+    <model name="wall_south">
+      <static>true</static>
+      <link name="link">
+        <pose>0 -7.5 1.5 0 0 0</pose>
+        <collision name="c"><geometry><box><size>20 0.15 3</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>20 0.15 3</size></box></geometry>
+          <material><ambient>0.92 0.90 0.88 1</ambient><diffuse>0.92 0.90 0.88 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_east">
+      <static>true</static>
+      <link name="link">
+        <pose>10 0 1.5 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.15 15 3</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.15 15 3</size></box></geometry>
+          <material><ambient>0.92 0.90 0.88 1</ambient><diffuse>0.92 0.90 0.88 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_west">
+      <static>true</static>
+      <link name="link">
+        <pose>-10 0 1.5 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.15 15 3</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.15 15 3</size></box></geometry>
+          <material><ambient>0.92 0.90 0.88 1</ambient><diffuse>0.92 0.90 0.88 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Internal divider wall with doorway gap -->
+    <!-- AFTER: shorten divider_left so gap is y=-3.5 to y=0 (3.5m doorway) -->
+    <model name="divider_left">
+      <link name="link">
+        <pose>0 3.25 1.5 0 0 0</pose>   <!-- shifted center up -->
+        <collision name="c"><geometry><box><size>0.15 8.5 3</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.15 8.5 3</size></box></geometry>
+          <material><ambient>0.88 0.86 0.84 1</ambient><diffuse>0.88 0.86 0.84 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <!-- doorway gap: -2.5 to 0 is open -->
+    <model name="divider_right">
+      <static>true</static>
+      <link name="link">
+        <pose>0 -5.25 1.5 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.15 4.5 3</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.15 4.5 3</size></box></geometry>
+          <material><ambient>0.88 0.86 0.84 1</ambient><diffuse>0.88 0.86 0.84 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== OFFICE FURNITURE — Zone A (left side) ===== -->
+
+    <!-- Desk 1 -->
+    <model name="desk_1">
+      <static>true</static>
+      <pose>-7 5 0.38 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.6 0.8 0.76</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>1.6 0.8 0.76</size></box></geometry>
+          <material><ambient>0.55 0.35 0.15 1</ambient><diffuse>0.55 0.35 0.15 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Office chair 1 -->
     <model name="chair_1">
       <static>true</static>
-      <pose>-2 2 0.5 0 0 0</pose>
+      <pose>-7 4 0.45 0 0 0</pose>
       <link name="link">
-        <collision name="collision"><geometry><box><size>0.5 0.5 1.0</size></box></geometry></collision>
-        <visual name="visual">
-          <geometry><box><size>0.5 0.5 1.0</size></box></geometry>
-          <material><ambient>0.2 0.2 0.8 1</ambient><diffuse>0.2 0.2 0.8 1</diffuse></material>
-        </visual>
-      </link>
-    </model>
-    
-    <model name="table">
-      <static>true</static>
-      <pose>-2 0 0.4 0 0 0</pose>
-      <link name="link">
-        <collision name="collision"><geometry><box><size>1.5 1.0 0.8</size></box></geometry></collision>
-        <visual name="visual">
-          <geometry><box><size>1.5 1.0 0.8</size></box></geometry>
-          <material><ambient>0.4 0.2 0.0 1</ambient><diffuse>0.4 0.2 0.0 1</diffuse></material>
+        <collision name="c"><geometry><box><size>0.55 0.55 0.9</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.55 0.55 0.9</size></box></geometry>
+          <material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material>
         </visual>
       </link>
     </model>
 
-    <!-- Targets (Dust and Trash) -->
-    <model name="dust_spot_1">
+    <!-- Desk 2 -->
+    <model name="desk_2">
       <static>true</static>
-      <pose>1 -1 0.001 0 0 0</pose>
+      <pose>-4 5 0.38 0 0 0</pose>
       <link name="link">
-        <visual name="visual">
+        <collision name="c"><geometry><box><size>1.6 0.8 0.76</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>1.6 0.8 0.76</size></box></geometry>
+          <material><ambient>0.55 0.35 0.15 1</ambient><diffuse>0.55 0.35 0.15 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Office chair 2 -->
+    <model name="chair_2">
+      <static>true</static>
+      <pose>-4 4 0.45 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.55 0.55 0.9</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.55 0.55 0.9</size></box></geometry>
+          <material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Desk 3 -->
+    <model name="desk_3">
+      <static>true</static>
+      <pose>-7 -2 0.38 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.6 0.8 0.76</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>1.6 0.8 0.76</size></box></geometry>
+          <material><ambient>0.55 0.35 0.15 1</ambient><diffuse>0.55 0.35 0.15 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Office chair 3 -->
+    <model name="chair_3">
+      <static>true</static>
+      <pose>-7 -3 0.45 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.55 0.55 0.9</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.55 0.55 0.9</size></box></geometry>
+          <material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Filing cabinet row -->
+    <model name="cabinet_1">
+      <static>true</static>
+      <pose>-9 0 0.6 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.5 0.6 1.2</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.5 0.6 1.2</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient><diffuse>0.6 0.6 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="cabinet_2">
+      <static>true</static>
+      <pose>-9 1 0.6 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.5 0.6 1.2</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.5 0.6 1.2</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient><diffuse>0.6 0.6 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== OFFICE FURNITURE — Zone B (right side, meeting room) ===== -->
+
+    <!-- Conference table -->
+    <model name="conf_table">
+      <static>true</static>
+      <pose>6 3 0.38 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>3.0 1.4 0.76</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>3.0 1.4 0.76</size></box></geometry>
+          <material><ambient>0.4 0.25 0.1 1</ambient><diffuse>0.4 0.25 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Meeting chairs around table -->
+    <model name="mchair_1">
+      <static>true</static>
+      <pose>4.8 3 0.45 0 0 1.5708</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.5 0.5 0.9</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.5 0.5 0.9</size></box></geometry>
+          <material><ambient>0.2 0.3 0.5 1</ambient><diffuse>0.2 0.3 0.5 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="mchair_2">
+      <static>true</static>
+      <pose>6 4.5 0.45 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.5 0.5 0.9</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.5 0.5 0.9</size></box></geometry>
+          <material><ambient>0.2 0.3 0.5 1</ambient><diffuse>0.2 0.3 0.5 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="mchair_3">
+      <static>true</static>
+      <pose>7.2 3 0.45 0 0 1.5708</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.5 0.5 0.9</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.5 0.5 0.9</size></box></geometry>
+          <material><ambient>0.2 0.3 0.5 1</ambient><diffuse>0.2 0.3 0.5 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Whiteboard -->
+    <model name="whiteboard">
+      <static>true</static>
+      <pose>9.9 3 1.2 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.05 2.0 1.2</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.05 2.0 1.2</size></box></geometry>
+          <material><ambient>0.98 0.98 0.98 1</ambient><diffuse>0.98 0.98 0.98 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Reception desk -->
+    <model name="reception_desk">
+      <static>true</static>
+      <pose>6 -4 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>2.5 0.7 1.0</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>2.5 0.7 1.0</size></box></geometry>
+          <material><ambient>0.7 0.7 0.7 1</ambient><diffuse>0.7 0.7 0.7 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Waiting area sofa -->
+    <model name="sofa">
+      <static>true</static>
+      <pose>7.5 -6.5 0.35 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>2.2 0.8 0.7</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>2.2 0.8 0.7</size></box></geometry>
+          <material><ambient>0.3 0.3 0.5 1</ambient><diffuse>0.3 0.3 0.5 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Coffee table -->
+    <model name="coffee_table">
+      <static>true</static>
+      <pose>7.5 -5.2 0.22 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.0 0.5 0.44</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>1.0 0.5 0.44</size></box></geometry>
+          <material><ambient>0.45 0.28 0.1 1</ambient><diffuse>0.45 0.28 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Printer/copier -->
+    <model name="printer">
+      <static>true</static>
+      <pose>-1.5 6.8 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.6 0.5 1.0</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.6 0.5 1.0</size></box></geometry>
+          <material><ambient>0.85 0.85 0.85 1</ambient><diffuse>0.85 0.85 0.85 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Plant pot corners -->
+    <model name="plant_1">
+      <static>true</static>
+      <pose>9.5 7 0.3 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><cylinder><radius>0.2</radius><length>0.6</length></cylinder></geometry></collision>
+        <visual name="v">
+          <geometry><cylinder><radius>0.2</radius><length>0.6</length></cylinder></geometry>
+          <material><ambient>0.2 0.5 0.2 1</ambient><diffuse>0.2 0.5 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="plant_2">
+      <static>true</static>
+      <pose>-9.5 7 0.3 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><cylinder><radius>0.2</radius><length>0.6</length></cylinder></geometry></collision>
+        <visual name="v">
+          <geometry><cylinder><radius>0.2</radius><length>0.6</length></cylinder></geometry>
+          <material><ambient>0.2 0.5 0.2 1</ambient><diffuse>0.2 0.5 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== CLEANING TARGETS ===== -->
+
+    <!-- Dust spots (grey flat discs) -->
+    <model name="dust_1">
+      <static>true</static>
+      <pose>-5 1 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="v">
+          <geometry><cylinder><radius>0.25</radius><length>0.002</length></cylinder></geometry>
+          <material><ambient>0.4 0.4 0.4 0.9</ambient><diffuse>0.4 0.4 0.4 0.9</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="dust_2">
+      <static>true</static>
+      <pose>3 -2 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="v">
           <geometry><cylinder><radius>0.2</radius><length>0.002</length></cylinder></geometry>
-          <material><ambient>0.3 0.3 0.3 1</ambient><diffuse>0.3 0.3 0.3 1</diffuse></material>
+          <material><ambient>0.4 0.4 0.4 0.9</ambient><diffuse>0.4 0.4 0.4 0.9</diffuse></material>
         </visual>
       </link>
     </model>
 
+    <model name="dust_3">
+      <static>true</static>
+      <pose>-2 -5 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="v">
+          <geometry><cylinder><radius>0.18</radius><length>0.002</length></cylinder></geometry>
+          <material><ambient>0.4 0.4 0.4 0.9</ambient><diffuse>0.4 0.4 0.4 0.9</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Trash items (red/orange small boxes) -->
     <model name="trash_1">
       <static>true</static>
-      <pose>-3 -3 0.05 0 0 0</pose>
+      <pose>-6 -5 0.05 0 0 0</pose>
       <link name="link">
-        <collision name="collision"><geometry><box><size>0.1 0.1 0.1</size></box></geometry></collision>
-        <visual name="visual">
-          <geometry><box><size>0.1 0.1 0.1</size></box></geometry>
-          <material><ambient>1 0 0 1</ambient><diffuse>1 0 0 1</diffuse></material> <!-- Red color to easily identify -->
+        <collision name="c"><geometry><box><size>0.12 0.12 0.1</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 0.12 0.1</size></box></geometry>
+          <material><ambient>0.9 0.2 0.1 1</ambient><diffuse>0.9 0.2 0.1 1</diffuse></material>
         </visual>
       </link>
     </model>
-    
+
+    <model name="trash_2">
+      <static>true</static>
+      <pose>4 6 0.05 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.12 0.12 0.1</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 0.12 0.1</size></box></geometry>
+          <material><ambient>0.9 0.5 0.1 1</ambient><diffuse>0.9 0.5 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="trash_3">
+      <static>true</static>
+      <pose>8 -2 0.05 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.12 0.12 0.1</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 0.12 0.1</size></box></geometry>
+          <material><ambient>0.9 0.2 0.1 1</ambient><diffuse>0.9 0.2 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
   </world>
 </sdf>
