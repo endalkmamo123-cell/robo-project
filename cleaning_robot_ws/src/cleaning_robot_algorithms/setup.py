@@ -23,13 +23,14 @@ setup(
     license='MIT',
     entry_points={
         'console_scripts': [
-            'astar     = cleaning_robot_algorithms.astar:main',
-            'dijkstra  = cleaning_robot_algorithms.dijkstra:main',
-            'dwa       = cleaning_robot_algorithms.dwa:main',
-            'apf       = cleaning_robot_algorithms.apf:main',
-	        'vacuum    = cleaning_robot_algorithms.vacuum:main',
-            'explorer  = cleaning_robot_algorithms.explorer:main',   
-            'benchmark = cleaning_robot_algorithms.benchmark:main',
+            'astar                 = cleaning_robot_algorithms.astar:main',
+            'dijkstra              = cleaning_robot_algorithms.dijkstra:main',
+            'dwa                   = cleaning_robot_algorithms.dwa:main',
+            'apf                   = cleaning_robot_algorithms.apf:main',
+            'vacuum                = cleaning_robot_algorithms.vacuum:main',
+            'explorer              = cleaning_robot_algorithms.explorer:main',
+            'benchmark             = cleaning_robot_algorithms.benchmark:main',
+            'pedestrian_controller = cleaning_robot_algorithms.pedestrian_controller:main',
         ],
     },
 )

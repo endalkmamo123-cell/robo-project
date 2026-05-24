@@ -70,6 +70,8 @@ def generate_launch_description():
             '/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry',
             '/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist',
             '/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V',
+            # Entity delete service: exposes /world/office_world/remove as a ROS2 service
+            '/world/office_world/remove@ros_gz_interfaces/srv/DeleteEntity@gz.msgs.Entity@gz.msgs.Boolean',
         ]
     )
 

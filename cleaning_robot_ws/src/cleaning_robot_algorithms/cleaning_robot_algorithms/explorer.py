@@ -35,11 +35,11 @@ TARGETS = [
     ('trash_3',  8.0, -2.0),
 ]
 
-EXPLORE_TIME     = 90.0
+EXPLORE_TIME     = 30.0
 OBSTACLE_DIST    = 0.50
 SIDE_CLEAR       = 0.60
-FORWARD_SPEED    = 0.28
-TURN_SPEED       = 1.0
+FORWARD_SPEED    = 0.55
+TURN_SPEED       = 1.4
 WAYPOINT_TOL     = 0.35   # metres — close enough to a waypoint
 GOAL_TOLERANCE   = 0.45   # metres — close enough to final target
 GOAL_TIMEOUT     = 60.0
@@ -151,10 +151,12 @@ class AutonomousExplorer(Node):
         elapsed = time.time() - self.start_time
 
         if self.phase == 'explore':
-            if self.map_known >= MAP_READY_CELLS and elapsed >= EXPLORE_TIME:
-                self.get_logger().info(
-                    f'Map ready ({self.map_known} cells known). '
-                    'Switching to CLEAN phase. A*/Dijkstra will plan routes.')
+            map_ready = self.map_known >= MAP_READY_CELLS
+            time_up   = elapsed >= EXPLORE_TIME
+            if time_up:
+                reason = (f'Map ready ({self.map_known} cells)' if map_ready
+                          else f'Explore time ({EXPLORE_TIME}s) elapsed (no SLAM map — will drive directly)')
+                self.get_logger().info(f'{reason}. Switching to CLEAN phase.')
                 self.phase      = 'clean'
                 self.goal_start = time.time()
                 self.last_check_pos  = (self.rx, self.ry)
@@ -237,23 +239,16 @@ class AutonomousExplorer(Node):
             self._publish_goal(tx, ty, name)
             return   # wait for path to arrive
 
-        # ── If still waiting for path, drive directly (fallback) ───────
-        # Request a path from A*/Dijkstra if not already done
-        if not self.current_path and not self.path_requested:
-            self._publish_goal(tx, ty, name)
-            return
-
-        # If waiting too long for path → give up, use APF fallback
+        # If waiting too long for path (e.g. no map yet) → drive directly
         if not self.current_path and self.path_requested:
             wait_time = time.time() - self.last_goal_pub
             if wait_time < 5.0:
                 return   # still waiting
             else:
-                # APF is already running and has the goal — just let it drive
                 self.get_logger().info(
-                    f'No path from planner for {name} — APF driving directly',
+                    f'No path from planner for {name} — driving directly',
                     throttle_duration_sec=3.0)
-                # Don't publish cmd_vel — APF owns it now
+                self._drive_direct(tx, ty, name, dist_to_target)
                 return
 
         # ── Follow the planned path waypoint by waypoint ───────────────
